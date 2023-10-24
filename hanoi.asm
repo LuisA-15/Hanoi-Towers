@@ -1,35 +1,39 @@
+# Algoritmo Torres de Hanoi
+# Yochabel Martinez Cazares
+# Luis Raul Acosta Mendoza
+
 .text
-	addi s0, zero, 5		# Cantidad de discos
+	addi s0, zero, 5	# Cantidad de discos
 	
 	lui s1, 0x10010		# Cargar tope de torre 1
 	
-	addi t0, zero, 1	# for (int i = 1; i < 5; i++)
-llenarTorre:	blt s0, t0, continue
-		sw t0, 0(s1)
-		addi s1, s1, 0x20
-		addi t0, t0, 1
+					# Llenar la torre de abajo hacia arriba
+	addi t0, zero, 1		# for (int i = 1;
+llenarTorre:	blt s0, t0, continue	# i <= 5; (Si 5 < i, sale del ciclo)
+		sw t0, 0(s1)		# Torre1[i] = i
+		addi s1, s1, 0x20	# Avanzar al siguiente nivel de la torre 1
+		addi t0, t0, 1		# i++;)
 		jal llenarTorre
 
 continue:	nop
 	addi s1, s1, -0x20	# Mover pointer de torre 1 a su base
-	addi s2, s1, 4		# pointer a torre 2
-	addi s3, s1, 8		# pointer a torre 3
+	addi s2, s1, 4		# pointer a la base de torre 2
+	addi s3, s1, 8		# pointer a la base de torre 3
 	
 	
 	add a2, zero, s1	# Torre inicial
 	add a3, zero, s2	# Torre auxiliar
 	add a4, zero, s3	# Torre final
 	add a5, zero, s4	# Torre temp (Para hacer swaps)
-	addi t1, zero, 1
+	addi t1, zero, 1	# Registro usado despues para comparar con 1
 
 	jal hanoi
 	jal end
-hanoi:	bne s0, t1, hanoirecursive
-	# Mover de inicial a Final
-	lw t2, 0(a2)		# Cargar el valor del disco en el tope de la torre incial
+hanoi:	bne s0, t1, hanoirecursive	# if (n != 1)
+	# Mover de torre inicial a torre final
+	lw t2, 0(a2)		# Cargar el valor del disco de la torre inicial
 	sw zero, 0(a2)		# Quitar el disco de la torre inicial
-
-	sw t2, 0(a4)		# Cargar el disco a mover en la torre final
+	sw t2, 0(a4)		# Cargar el disco en la torre final
 	
 	jalr ra
 	
@@ -46,9 +50,10 @@ hanoirecursive: nop
 	add a5, zero, a3	#
 	add a3, zero, a4	# Swap(Torre auxiliar, Torre final)
 	add a4, zero, a5	#
-	addi a2, a2, -0x20
-	addi a3, a3, -0x20
-	addi a4, a4, -0x20
+	
+	addi a2, a2, -0x20	#
+	addi a3, a3, -0x20	# Mover los apuntadores a torres al nivel que corresponde
+	addi a4, a4, -0x20	#
 	
 	jal hanoi		# hanoi(n - 1, torre inicial, torre final, torre auxiliar)
 	
@@ -60,10 +65,9 @@ hanoirecursive: nop
 	addi sp, sp, 20
 	
 	# Mover de inicial a Final
-	lw t2, 0(a2)		# Cargar el valor del disco en el tope de la torre incial
+	lw t2, 0(a2)		# Cargar el valor del disco de la torre inicial
 	sw zero, 0(a2)		# Quitar el disco de la torre inicial
-	
-	sw t2, 0(a4)		# Cargar el disco a mover en la torre final
+	sw t2, 0(a4)		# Cargar el disco en la torre final
 	
 	addi sp, sp, -20
 	sw ra, 16(sp)		# Push ra a stack
@@ -77,9 +81,9 @@ hanoirecursive: nop
 	add a2, zero, a3	# Swap(Torre inical, Torre auxiliar)
 	add a3, zero, a5	#
 	
-	addi a2, a2, -0x20
-	addi a3, a3, -0x20
-	addi a4, a4, -0x20
+	addi a2, a2, -0x20	#
+	addi a3, a3, -0x20	# Mover los apuntadores a torres al nivel que corresponde
+	addi a4, a4, -0x20	#
 	
 	jal hanoi		# hanoi(n - 1, torre auxiliar, torre inicial, torre final)
 	
