@@ -1,7 +1,3 @@
-.data
-	torre1: .word 0
-	torre2: .word 0
-	torre3: .word 0
 .text
 	addi s0, zero, 5		# Cantidad de discos
 	
@@ -18,7 +14,6 @@ continue:	nop
 	addi s1, s1, -0x20	# Mover pointer de torre 1 a su base
 	addi s2, s1, 4		# pointer a torre 2
 	addi s3, s1, 8		# pointer a torre 3
-#	lui s1, 0x10010		# Mover pointer de torre 1 a su tope
 	
 	
 	add a2, zero, s1	# Torre inicial
@@ -33,9 +28,7 @@ hanoi:	bne s0, t1, hanoirecursive
 	# Mover de inicial a Final
 	lw t2, 0(a2)		# Cargar el valor del disco en el tope de la torre incial
 	sw zero, 0(a2)		# Quitar el disco de la torre inicial
-#	addi a2, a2, 0x20	# Bajar un nivel el pointer a torre inicial	
 
-#	addi a4, a4, -0x20	# Subir un nivel el pointer de torre final
 	sw t2, 0(a4)		# Cargar el disco a mover en la torre final
 	
 	jalr ra
@@ -67,14 +60,10 @@ hanoirecursive: nop
 	addi sp, sp, 20
 	
 	# Mover de inicial a Final
-#	addi a2, a2, 0x20	# Bajar un nivel el pointer a torre inicial
 	lw t2, 0(a2)		# Cargar el valor del disco en el tope de la torre incial
 	sw zero, 0(a2)		# Quitar el disco de la torre inicial
 	
 	sw t2, 0(a4)		# Cargar el disco a mover en la torre final
-#	addi a4, a4, -0x20	# Subir un nivel el pointer de torre final
-	
-	#######
 	
 	addi sp, sp, -20
 	sw ra, 16(sp)		# Push ra a stack
